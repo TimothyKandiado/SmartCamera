@@ -2,16 +2,15 @@ using System;
 using System.Collections.Generic;
 using FlaxEngine;
 
-namespace Tmore.SmartCam;
+namespace Tmore.SmartCamera;
 
 /// <summary>
-/// SmartVirtualCam Script.
+/// SmartCameraDirector Script.
+/// Needs to be attached to a Camera
 /// </summary>
 
 public class SmartCameraDirector : Script
 {
-    public Camera MainCamera;
-    
     private readonly List<SmartVirtualCamera> _virtualCameras = [];
     private SmartVirtualCamera _currentVirtualCamera;
     
@@ -44,17 +43,25 @@ public class SmartCameraDirector : Script
         }
         
         _instance = this;
-        
-        if (MainCamera) return;
-        
-        MainCamera = Camera.MainCamera;
     }
     
     public override void OnUpdate()
     {
-        if (!_currentVirtualCamera) return;
+        if (!_currentVirtualCamera)
+        {
+            if (_virtualCameras.Count == 0) return;
+            Flush();
+            return;
+        }
         
         _currentVirtualCamera.UpdateVirtualCamera();
+    }
+
+    public override void OnFixedUpdate()
+    {
+        if (!_currentVirtualCamera) return;
+        
+        _currentVirtualCamera.FixedUpdateVirtualCamera();
         
         Actor.Position = _currentVirtualCamera.VirtualCameraPosition;
         Actor.Rotation = _currentVirtualCamera.Transform.GetRotation();
@@ -64,6 +71,7 @@ public class SmartCameraDirector : Script
     {
         if (_virtualCameras.Contains(virtualCamera)) return;
         
+        Utils.LogMessage($"Virtual Camera: {virtualCamera.Actor.Name} added");
         _virtualCameras.Add(virtualCamera);
     }
 
@@ -72,6 +80,7 @@ public class SmartCameraDirector : Script
         if (!_virtualCameras.Contains(virtualCamera)) return;
         
         _virtualCameras.Remove(virtualCamera);
+        Utils.LogMessage($"Virtual Camera: {virtualCamera.Actor.Name} removed");
         Flush();
     }
     

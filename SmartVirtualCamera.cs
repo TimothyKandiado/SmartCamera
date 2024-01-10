@@ -1,9 +1,10 @@
 ﻿using FlaxEngine;
 
-namespace Tmore.SmartCam;
+namespace Tmore.SmartCamera;
 
 /// <summary>
-/// SmartVirtualCam Script.
+/// SmartVirtualCamera Script.
+/// Attached to an empty actor representing a virtual camera
 /// </summary>
 public class SmartVirtualCamera : Script
 {
@@ -23,6 +24,7 @@ public class SmartVirtualCamera : Script
     
     public override void OnEnable()
     {
+        Utils.LogMessage($"Virtual Camera: {Actor.Name} enabled");
         var cameraDirector = SmartCameraDirector.Instance;
         cameraDirector.AddVirtualCamera(this);
     }
@@ -33,10 +35,8 @@ public class SmartVirtualCamera : Script
         cameraDirector.RemoveVirtualCamera(this);
     }
     
-    internal virtual void UpdateVirtualCamera()
-    {
-        
-    }
+    internal virtual void UpdateVirtualCamera() {}
+    internal virtual void FixedUpdateVirtualCamera() {}
 
     public override void OnDebugDrawSelected()
     {
