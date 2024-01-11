@@ -13,23 +13,8 @@ public class SmartCameraDirector : Script
 {
     private readonly List<SmartVirtualCamera> _virtualCameras = [];
     private SmartVirtualCamera _currentVirtualCamera;
-    
-    internal static SmartCameraDirector Instance
-    {
-        get
-        {
-            if (_instance) return _instance;
 
-            var actor = new EmptyActor
-            {
-                Name = "SmartCamDirector"
-            };
-            
-            var script = actor.AddScript<SmartCameraDirector>();
-            _instance = script;
-            return _instance;
-        }
-    }
+    internal static SmartCameraDirector Instance => _instance;
 
     private SmartCameraDirector() {}
 
@@ -47,12 +32,7 @@ public class SmartCameraDirector : Script
     
     public override void OnUpdate()
     {
-        if (!_currentVirtualCamera)
-        {
-            if (_virtualCameras.Count == 0) return;
-            Flush();
-            return;
-        }
+        if (!_currentVirtualCamera) return;
         
         _currentVirtualCamera.UpdateVirtualCamera();
     }
@@ -73,14 +53,14 @@ public class SmartCameraDirector : Script
         
         Utils.LogMessage($"Virtual Camera: {virtualCamera.Actor.Name} added");
         _virtualCameras.Add(virtualCamera);
+        Flush();
     }
 
     internal void RemoveVirtualCamera(SmartVirtualCamera virtualCamera)
     {
-        if (!_virtualCameras.Contains(virtualCamera)) return;
-        
         _virtualCameras.Remove(virtualCamera);
         Utils.LogMessage($"Virtual Camera: {virtualCamera.Actor.Name} removed");
+        Utils.LogMessage(_virtualCameras);
         Flush();
     }
     
@@ -113,5 +93,13 @@ public class SmartCameraDirector : Script
         }
 
         return priorityCamera;
+    }
+
+    public override void OnDestroy()
+    {
+        _virtualCameras.Clear();
+        _instance = null;
+        
+        Utils.LogMessage("Destroying Camera Director");
     }
 }

@@ -25,12 +25,15 @@ public class SmartVirtualCamera : Script
     public override void OnEnable()
     {
         Utils.LogMessage($"Virtual Camera: {Actor.Name} enabled");
+        
         var cameraDirector = SmartCameraDirector.Instance;
         cameraDirector.AddVirtualCamera(this);
     }
     
     public override void OnDisable()
     {
+        Utils.LogMessage($"Virtual Camera: {Actor.Name} disabled");
+        
         var cameraDirector = SmartCameraDirector.Instance;
         cameraDirector.RemoveVirtualCamera(this);
     }
