@@ -1,4 +1,4 @@
-﻿#define DEBUG_LOG_ENABLED
+﻿//#define DEBUG_LOG_ENABLED
 
 using FlaxEngine;
 

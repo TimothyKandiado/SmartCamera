@@ -8,11 +8,10 @@ namespace Tmore.SmartCamera;
 /// </summary>
 public class SmartVirtualCamera : Script
 {
+    [Header("Camera Properties")] 
     [Serialize]
     [Tooltip("Higher numbers are given more priority when changing cameras")]
     public int Priority { get; set; } = 0;
-
-    [Header("Camera Properties")] 
     public float FieldOfView = 60;
     public float NearPlane = 10.0f;
     public float FarPlane = 1000f;

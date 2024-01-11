@@ -14,20 +14,18 @@ public class SmartCameraDirector : Script
     private readonly List<SmartVirtualCamera> _virtualCameras = [];
     private SmartVirtualCamera _currentVirtualCamera;
 
-    internal static SmartCameraDirector Instance => _instance;
+    internal static SmartCameraDirector Instance { get; private set; }
 
     private SmartCameraDirector() {}
 
-    private static SmartCameraDirector _instance;
-
     public override void OnAwake() {
-        if (_instance)
+        if (Instance)
         {
             Destroy(this);
             return;
         }
         
-        _instance = this;
+        Instance = this;
     }
     
     public override void OnUpdate()
@@ -98,7 +96,7 @@ public class SmartCameraDirector : Script
     public override void OnDestroy()
     {
         _virtualCameras.Clear();
-        _instance = null;
+        Instance = null;
         
         Utils.LogMessage("Destroying Camera Director");
     }
